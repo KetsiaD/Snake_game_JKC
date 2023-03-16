@@ -6,6 +6,7 @@ use rand::SeedableRng;
 use rand::rngs::SmallRng;
 use rand::RngCore;
 use core::default::Default;
+use core::panic;
 
 const NEW_WALL_FREQ: isize = 100;
 const NEW_BOMB_FREQ: isize = 20;
@@ -20,7 +21,7 @@ const WALLS: &str = "###########################################################
 #                                                                              #
 #                                                                              #
 #                                                                              #
-##################                                                             #
+#                                                                              #
 #                                                                              #
 #                                                                              #
 #                                                                              #
@@ -39,7 +40,7 @@ const WALLS: &str = "###########################################################
 pub struct Game {
     player: Player,
     walls: Items,
-    explosives: Items,
+    food: Items,
     tick_count: isize,
     // Obtained from: https://stackoverflow.com/questions/67627335/how-do-i-use-the-rand-crate-without-the-standard-library
     rng: SmallRng,
@@ -47,10 +48,16 @@ pub struct Game {
 
 impl Game {
     pub fn new() -> Self {
-        let mut explosives = Items::default();
-        explosives.change_color(Color::LightRed);
-        Self {player: Player::new(), explosives, walls: Items::new(WALLS, Color::LightGreen), tick_count: 0, rng: SmallRng::seed_from_u64(3)}
+        let mut food = Items::default();
+        food.change_color(Color::LightRed);
+        Self {player: Player::new(), food, walls: Items::new(WALLS, Color::LightGreen), tick_count: 0, rng: SmallRng::seed_from_u64(3)}
     }
+    pub fn reset(&mut self){
+        let mut food = Items::default();
+        food.change_color(Color::LightRed);
+        Self {player: Player::new(), food, walls: Items::new(WALLS, Color::LightGreen), tick_count: 0, rng: SmallRng::seed_from_u64(3)};
+    }
+
 
     pub fn key(&mut self, key: DecodedKey) {
         match key {
@@ -75,25 +82,34 @@ impl Game {
                     plot(' ', self.player.x, self.player.y, ColorCode::new(Color::Black, Color::Black));
                     self.player = future;
                 }
-                if self.player.is_colliding(&self.explosives) {
+                if future.is_colliding(&self.walls){
+                    panic!("Game Over");
+                }
+                if self.player.is_colliding(&self.food) {
                     self.player.bomb_count += 1;
-                    self.explosives.remove(self.player.y, self.player.x);
+                    self.food.remove(self.player.y, self.player.x);
+                    self.food.add_random_item(&mut self.rng)
                 }
             }
-            DecodedKey::Unicode(_) => {}
+            DecodedKey::Unicode(char) => {
+                match char{
+                    'r' =>{self.reset();}
+                    _ => {}
+                }
+            }
         }
     }
 
     pub fn tick(&mut self) {
         self.tick_count += 1;
-        if self.tick_count % NEW_WALL_FREQ == 0 {
-            self.walls.add_random_item(&mut self.rng);
+        // if self.tick_count % NEW_WALL_FREQ == 0 {
+        //     self.walls.add_random_item(&mut self.rng);
+        // }
+        if self.tick_count == 5 {
+            self.food.add_random_item(&mut self.rng);
         }
-        if self.tick_count % NEW_BOMB_FREQ == 0 {
-            self.explosives.add_random_item(&mut self.rng);
-        }
-        self.walls.draw();
-        self.explosives.draw();
+        // self.walls.draw();
+        self.food.draw();
         plot('*', self.player.x, self.player.y, ColorCode::new(Color::Green, Color::Black));
         plot_num(self.tick_count, BUFFER_WIDTH / 2, 0, ColorCode::new(Color::LightGray, Color::Black));
         plot_str("Bombs:", 60, 0, ColorCode::new(Color::LightRed, Color::Black));
@@ -122,6 +138,9 @@ impl Items {
         }
         Self {items: walls, color}
     }
+
+   
+    
 
     pub fn add_random_item(&mut self, rng: &mut SmallRng) {
         let col: usize = 1 + rng.next_u32() as usize % (BUFFER_WIDTH - 1);
