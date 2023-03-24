@@ -100,7 +100,7 @@ impl Game {
             }
             
             
-            if (self.food.food_map[self.player.x][self.player.y]){
+            if self.food.food_map[self.player.x][self.player.y]{
                 self.food.food_map[self.player.x][self.player.y] = false;
                 self.food.add_food();
                 self.player.eat();
@@ -108,6 +108,7 @@ impl Game {
            
             if self.player.has_moved {
                
+               // Find a way to add collision with self. I think it should be if self.player.check_collision(self.player) || self.player.edge 
                 if  self.player.edge{
                     self.running = false;
                     self.score +=1;
