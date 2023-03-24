@@ -93,10 +93,10 @@ impl Game {
             
             
 
-            plot('O', self.player.x, self.player.y, ColorCode::new(Color::Green, Color::Black));
+            plot('▧', self.player.x, self.player.y, ColorCode::new(Color::Green, Color::Black));
             for i in 0..self.player.food_ate+1{
                 
-                plot('O', self.player.body[i].x, self.player.body[i].y, ColorCode::new(Color::Green, Color::Black));
+                plot('▧', self.player.body[i].x, self.player.body[i].y, ColorCode::new(Color::Green, Color::Black));
             }
             
             
@@ -207,11 +207,6 @@ impl Player {
         Self {x, y , food_ate: 0, body, has_moved: false, direction: 'n', edge: false}
         
     }
-
-    // pub fn is_colliding(&self, walls: &Walls) -> bool {
-    //     // set up someway for this to check other players tail
-    //     false
-    // }
     
     pub fn eat(&mut self){
         self.food_ate +=1;
