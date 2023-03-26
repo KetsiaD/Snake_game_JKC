@@ -2,11 +2,8 @@
 #![feature(const_trait_impl)]
 
 
-use bare_metal_modulo::{ModNumC, MNum, ModNumIterator};
-use num::ToPrimitive;
 use pluggable_interrupt_os::vga_buffer::{BUFFER_WIDTH, BUFFER_HEIGHT, plot, ColorCode, Color, is_drawable, plot_num, plot_str};
 use pc_keyboard::{DecodedKey, KeyCode};
-use num::traits::SaturatingAdd;
 use rand::{Rng, SeedableRng};
 use rand::RngCore;
 use rand::rngs::SmallRng;

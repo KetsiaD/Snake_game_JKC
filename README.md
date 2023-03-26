@@ -1,21 +1,13 @@
-## Pluggable Interrupt Template
+## Snake Game Using Rust
 
-This project is a template that one can clone in order to set up
-a [Pluggable Interrupt OS](https://crates.io/crates/pluggable_interrupt_os).
+The following are the basic features of the game:
 
-It demonstrates a simple interactive program that uses both keyboard and timer interrupts. 
-When the user types a viewable key, it is added to a string in the middle of the screen. 
-When the user types an arrow key, the string begins moving in the indicated direction.
+To start the game, press:
+* Left, Right, Up, or Down key on your keyboard. 
 
-The program logic is largely in `lib.rs`, in the `LetterMover` struct. The code in 
-`main.rs` creates a `Mutex`-protected `LetterMover` object. The keyboard and timer handlers
-invoke the appropriate methods on the unlocked `LetterMover` object.
+Once any of the aforementioned key is pressed, the snake will start to move, and they you can still control it with those keys.
 
-This design pattern is highly recommended. Keep `main.rs` minimal, and encapsulate the 
-application logic a struct that is defined in `lib.rs`. For your own applications, you can
-use `LetterMover` as a starting point without modifying `main.rs` very much.
-
-Prior to building this example, be sure to install the following:
+Prior to playing the game, be sure to install the following:
 * [Qemu](https://www.qemu.org/)
 * Nightly Rust:
   * `rustup override set nightly`
