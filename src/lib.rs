@@ -107,19 +107,19 @@ impl Game {
                 self.food.food_map[self.player.x][self.player.y] = false;
                 self.food.add_food();
                 self.player.eat();
+                self.score += 1
             }
+    
            
             if self.player.has_moved {
                
                // Find a way to add collision with self. I think it should be if self.player.check_collision(self.player) || self.player.edge 
                 if  self.player.edge{
                     self.running = false;
-                    self.score +=1;
                     plot_str("GAME OVER:(", 27, 10, ColorCode::new(Color::LightRed, Color::Black));
 
                 }else if self.player.check_collision_self(){
                     self.running = false;
-                    self.score +=1;
                     plot_str("GAME OVER:(", 27, 10, ColorCode::new(Color::LightRed, Color::Black));
                 }
             }
@@ -223,6 +223,7 @@ impl Player {
     pub fn check_collisions(&mut self, op: Food) -> bool{
         op.occupied(self.y, self.x)
     }
+    
 
     pub fn check_collision_self(&self) -> bool {
         for i in 1..self.food_ate+1 { 
@@ -232,9 +233,7 @@ impl Player {
         }
         false
     }
-    // pub fn check_collisions_self(&mut self, op: Player) -> bool{
-    //     op.occupied(self.y, self.x)
-    // }
+    
 
     pub fn down(&mut self) {
         self.has_moved = true;
