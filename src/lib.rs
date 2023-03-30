@@ -210,7 +210,7 @@ impl Player {
         let mut small_rng = SmallRng::seed_from_u64(state);
         let x = small_rng.next_u64() as usize % BUFFER_WIDTH ; 
         let y = small_rng.next_u64() as usize % BUFFER_HEIGHT;
-        let  body: [Duple; 6000] = [Duple::new(0, 0); 6000];
+        let  body: [Duple; 6000] = [Duple::new(x, y); 6000];
 
         Self {x, y , food_ate: 0, body, has_moved: false, direction: 'n', edge: false}
         
